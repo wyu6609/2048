@@ -22,7 +22,6 @@ const GameBoard = () => {
     return storedHighScore !== null ? Number(storedHighScore) : 0;
   });
 
-  // Track touch positions for swipe detection
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
 
@@ -145,18 +144,17 @@ const GameBoard = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start", // ✅ Aligns game to the top of the screen
+        justifyContent: "flex-start", // ✅ Keep game higher up
         width: "100vw",
-        height: "100vh",
-        paddingTop: { xs: "10vh", md: "5vh" }, // ✅ Pushes game up on mobile
-        overflow: "hidden",
+        minHeight: "100vh", // ✅ Allow scrolling to refresh
+        paddingTop: { xs: "10vh", md: "5vh" }, // ✅ Pushes up on mobile
+        overflowX: "hidden", // ✅ Prevents horizontal scroll
         gap: 2,
-        touchAction: "none",
       }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <ToastContainer limit={1} />
+      <ToastContainer />
 
       <ScoreBoard score={score} highScore={highScore} />
 
