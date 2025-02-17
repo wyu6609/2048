@@ -20,19 +20,15 @@ const Tile = ({ value }) => {
     <Box
       className="tile"
       sx={{
-        width: "100%",
-        height: "100%",
-        minWidth: "60px",
-        minHeight: "60px",
-        maxWidth: "80px",
-        maxHeight: "80px",
+        width: 80,
+        height: 80,
         backgroundColor: colors[Number(value)] || "#CDC1B4",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "clamp(16px, 3vw, 24px)",
+        fontSize: "24px",
         fontWeight: "bold",
-        borderRadius: 2,
+        borderRadius: "8px",
         transition: "transform 0.2s ease-in-out",
       }}
     >

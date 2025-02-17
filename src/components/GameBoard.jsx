@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Tile from "./Tile";
+import ScoreBoard from "./ScoreBoard";
+import Controls from "./Controls";
 import {
   generateEmptyBoard,
   addRandomTile,
   moveTiles,
 } from "../utils/gameLogic";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import anime from "animejs";
 
 const GameBoard = ({ onScoreChange }) => {
@@ -30,6 +32,7 @@ const GameBoard = ({ onScoreChange }) => {
   const handleMove = (direction) => {
     let prevBoard = board.map((row) => row.slice());
     let { newBoard, score: gainedScore, moved } = moveTiles(board, direction);
+
     if (moved) {
       newBoard = addRandomTile(newBoard);
       setBoard(newBoard);
@@ -70,13 +73,17 @@ const GameBoard = ({ onScoreChange }) => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        width: "100vw",
         height: "100vh",
+        overflow: "hidden", // ✅ Prevents scrolling inside game
         gap: 2,
       }}
     >
+      <ScoreBoard score={score} />
+
       <Box
         sx={{
-          backgroundColor: "#F57C00", // Orange border
+          backgroundColor: "#F57C00",
           padding: "10px",
           borderRadius: "10px",
           boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
@@ -98,28 +105,9 @@ const GameBoard = ({ onScoreChange }) => {
         </Box>
       </Box>
 
-      {/* Styled Buttons */}
-      <Box sx={{ display: "flex", gap: 2 }}>
-        <Button variant="contained" onClick={resetGame} sx={buttonStyle}>
-          🔄 Reset
-        </Button>
-        <Button variant="contained" onClick={undoMove} sx={buttonStyle}>
-          ⏪ Undo
-        </Button>
-      </Box>
+      <Controls onReset={resetGame} onUndo={undoMove} />
     </Box>
   );
-};
-
-// Reusable Button Styles
-const buttonStyle = {
-  backgroundColor: "#F57C00",
-  color: "#FFF",
-  fontWeight: "bold",
-  borderRadius: "8px",
-  padding: "10px 20px",
-  fontSize: "16px",
-  "&:hover": { backgroundColor: "#FF9800" },
 };
 
 export default GameBoard;

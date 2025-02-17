@@ -4,7 +4,7 @@ import { Typography, Box } from "@mui/material";
 const ScoreBoard = ({ score }) => (
   <Box
     sx={{
-      marginTop: "20px", // Added margin at the top
+      marginTop: "20px",
       padding: 2,
       backgroundColor: "#F57C00",
       color: "white",

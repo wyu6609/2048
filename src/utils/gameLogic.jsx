@@ -19,7 +19,7 @@ export const addRandomTile = (board) => {
 };
 
 export const moveTiles = (board, direction) => {
-  let newBoard = board.map((row) => row.slice()); // Clone board
+  let newBoard = board.map((row) => row.slice());
   let moved = false,
     score = 0;
 
