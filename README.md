@@ -1,6 +1,6 @@
 # 2048 App 🧩
 
-[Play the game here! 🚀](https://wyu6609.github.io/2048){target="\_blank"}
+[Play the game here!](https://wyu6609.github.io/2048)🚀
 
 A simple and fun implementation of the classic **2048 game** built with React.
 
