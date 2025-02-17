@@ -1,6 +1,6 @@
 # 2048 App 🧩
 
-[Play the game here! 🚀](https://wyu6609.github.io/2048){:target="\_blank"}
+[Play the game here! 🚀](https://wyu6609.github.io/2048){target="\_blank"}
 
 A simple and fun implementation of the classic **2048 game** built with React.
 
@@ -27,7 +27,7 @@ A simple and fun implementation of the classic **2048 game** built with React.
    npm install
    ```
 
-3. \*_Run the app_
+3. **Run the app**
    ```sh
    npm start
    ```
