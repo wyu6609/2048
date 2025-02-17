@@ -22,10 +22,17 @@ const GameBoard = () => {
     return storedHighScore !== null ? Number(storedHighScore) : 0;
   });
 
+  // ✅ Load Theme Preference from LocalStorage
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem("darkMode") === "true";
+  });
+
+  // ✅ Track Swipe Gesture Start & End
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
 
   useEffect(() => {
+    // ✅ Listen for Arrow Key Presses
     const handleKeyDown = (event) => {
       const keyMap = {
         ArrowUp: "up",
@@ -42,10 +49,12 @@ const GameBoard = () => {
     };
   }, [board]);
 
+  // ✅ Handle Touch Start (Swipe Start)
   const handleTouchStart = (event) => {
     setTouchStart({ x: event.touches[0].clientX, y: event.touches[0].clientY });
   };
 
+  // ✅ Handle Touch End (Detect Swipe Direction)
   const handleTouchEnd = (event) => {
     if (!touchStart) return;
 
@@ -58,11 +67,13 @@ const GameBoard = () => {
     const deltaY = touchStart.y - event.changedTouches[0].clientY;
 
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      if (deltaX > 50) handleMove("left");
-      else if (deltaX < -50) handleMove("right");
+      // Horizontal Swipe
+      if (deltaX > 50) handleMove("left"); // Swipe Left
+      else if (deltaX < -50) handleMove("right"); // Swipe Right
     } else {
-      if (deltaY > 50) handleMove("up");
-      else if (deltaY < -50) handleMove("down");
+      // Vertical Swipe
+      if (deltaY > 50) handleMove("up"); // Swipe Up
+      else if (deltaY < -50) handleMove("down"); // Swipe Down
     }
 
     setTouchStart(null);
@@ -83,6 +94,7 @@ const GameBoard = () => {
     }
   };
 
+  // ✅ Animate Tiles on Movement
   const animateTiles = () => {
     anime({
       targets: ".tile",
@@ -92,19 +104,27 @@ const GameBoard = () => {
     });
   };
 
+  // ✅ Improved Game Over Logic
   const checkGameOver = (board) => {
     const hasEmptyTiles = board.some((row) => row.includes(null));
-    if (!hasEmptyTiles) {
-      saveHighScore();
-      toast.error("Game Over! Try again. 😢", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+    if (hasEmptyTiles) return; // ✅ Still playable
+
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        if (col < 3 && board[row][col] === board[row][col + 1]) return; // ✅ Mergeable horizontally
+        if (row < 3 && board[row][col] === board[row + 1][col]) return; // ✅ Mergeable vertically
+      }
     }
+
+    saveHighScore();
+    toast.error("Game Over! No moves left. 😢", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   };
 
   const saveHighScore = () => {
@@ -119,8 +139,18 @@ const GameBoard = () => {
         pauseOnHover: true,
         draggable: true,
       });
-    } else if (highScore === 0) {
-      localStorage.setItem("highScore", score);
+    } else {
+      toast.info(
+        `You scored ${score} points. Try again to beat ${highScore}!`,
+        {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
     }
   };
 
@@ -138,6 +168,13 @@ const GameBoard = () => {
     }
   };
 
+  // ✅ Toggle Light/Dark Mode
+  const toggleTheme = () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    localStorage.setItem("darkMode", newTheme);
+  };
+
   return (
     <Box
       sx={{
@@ -147,20 +184,22 @@ const GameBoard = () => {
         justifyContent: "flex-start",
         width: "100vw",
         minHeight: "100vh",
-        paddingTop: "15px", // ✅ Ensure scoreboard appears 15px from top
+        paddingTop: "15px",
         overflowX: "hidden",
-        gap: { xs: 1, md: 2 }, // ✅ Maintain spacing between components
+        gap: { xs: 1, md: 2 },
+        backgroundColor: isDarkMode ? "#222" : "#FAFAFA",
+        color: isDarkMode ? "white" : "black",
+        transition: "background-color 0.3s ease-in-out",
       }}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
+      onTouchStart={handleTouchStart} // ✅ Capture swipe start
+      onTouchEnd={handleTouchEnd} // ✅ Capture swipe end
     >
       <ToastContainer />
-
       <ScoreBoard score={score} highScore={highScore} />
 
       <Box
         sx={{
-          backgroundColor: "#F57C00",
+          backgroundColor: isDarkMode ? "#444" : "#F57C00",
           padding: "10px",
           borderRadius: "10px",
           boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
@@ -172,7 +211,7 @@ const GameBoard = () => {
             gridTemplateColumns: "repeat(4, minmax(60px, 80px))",
             gap: 1,
             padding: 2,
-            backgroundColor: "#BBADA0",
+            backgroundColor: isDarkMode ? "#666" : "#BBADA0",
             borderRadius: "8px",
           }}
         >
@@ -182,7 +221,12 @@ const GameBoard = () => {
         </Box>
       </Box>
 
-      <Controls onReset={resetGame} onUndo={undoMove} />
+      <Controls
+        onReset={resetGame}
+        onUndo={undoMove}
+        isDarkMode={isDarkMode}
+        toggleTheme={toggleTheme}
+      />
     </Box>
   );
 };

@@ -1,35 +1,41 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, IconButton } from "@mui/material";
+import Brightness4Icon from "@mui/icons-material/Brightness4"; // 🌙 Dark Mode
+import Brightness7Icon from "@mui/icons-material/Brightness7"; // ☀️ Light Mode
 
-const Controls = ({ onReset, onUndo }) => {
+const Controls = ({ onReset, onUndo, isDarkMode, toggleTheme }) => {
   return (
     <Box
       sx={{
         display: "flex",
-        gap: 2,
         justifyContent: "center",
-        marginTop: "20px",
+        alignItems: "center",
+        gap: 2,
+        marginTop: 2,
       }}
     >
-      <Button variant="contained" onClick={onReset} sx={buttonStyle}>
-        🔄 Reset
+      <Button variant="contained" color="primary" onClick={onReset}>
+        Reset
       </Button>
-      <Button variant="contained" onClick={onUndo} sx={buttonStyle}>
-        ⏪ Undo
+      <Button variant="contained" color="secondary" onClick={onUndo}>
+        Undo
       </Button>
+
+      {/* ✅ Theme Toggle Button Next to Undo */}
+      <IconButton
+        onClick={toggleTheme}
+        sx={{
+          backgroundColor: isDarkMode ? "#444" : "#ddd",
+          color: isDarkMode ? "white" : "black",
+          "&:hover": {
+            backgroundColor: isDarkMode ? "#555" : "#ccc",
+          },
+        }}
+      >
+        {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+      </IconButton>
     </Box>
   );
-};
-
-// Reusable Button Styles
-const buttonStyle = {
-  backgroundColor: "#F57C00",
-  color: "#FFF",
-  fontWeight: "bold",
-  borderRadius: "8px",
-  padding: "10px 20px",
-  fontSize: "16px",
-  "&:hover": { backgroundColor: "#FF9800" },
 };
 
 export default Controls;
