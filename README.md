@@ -31,3 +31,7 @@ A simple and fun implementation of the classic **2048 game** built with React.
    ```sh
    npm start
    ```
+
+## DEMO
+
+<p align="center"><img src = "public/2048_demo.gif"/></p>
