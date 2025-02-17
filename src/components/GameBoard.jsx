@@ -10,10 +10,13 @@ import {
 import { Box } from "@mui/material";
 import anime from "animejs";
 
-const GameBoard = ({ onScoreChange }) => {
+const GameBoard = () => {
   const [board, setBoard] = useState(addRandomTile(generateEmptyBoard()));
   const [history, setHistory] = useState([]);
   const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(
+    () => Number(localStorage.getItem("highScore")) || 0
+  );
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -34,15 +37,16 @@ const GameBoard = ({ onScoreChange }) => {
     let { newBoard, score: gainedScore, moved } = moveTiles(board, direction);
 
     if (moved) {
+      animateTiles(); // ✅ Animate movement
       newBoard = addRandomTile(newBoard);
       setBoard(newBoard);
       setHistory([...history, prevBoard]);
       setScore(score + gainedScore);
-      onScoreChange(score + gainedScore);
-      animateTiles();
+      checkGameOver(newBoard);
     }
   };
 
+  // ✅ Add animation for tiles using Anime.js
   const animateTiles = () => {
     anime({
       targets: ".tile",
@@ -52,11 +56,25 @@ const GameBoard = ({ onScoreChange }) => {
     });
   };
 
+  const checkGameOver = (board) => {
+    const hasEmptyTiles = board.some((row) => row.includes(null));
+    if (!hasEmptyTiles) {
+      saveHighScore();
+    }
+  };
+
+  const saveHighScore = () => {
+    if (score > highScore) {
+      setHighScore(score);
+      localStorage.setItem("highScore", score);
+    }
+  };
+
   const resetGame = () => {
+    saveHighScore();
     setBoard(addRandomTile(generateEmptyBoard()));
     setHistory([]);
     setScore(0);
-    onScoreChange(0);
   };
 
   const undoMove = () => {
@@ -75,11 +93,11 @@ const GameBoard = ({ onScoreChange }) => {
         justifyContent: "center",
         width: "100vw",
         height: "100vh",
-        overflow: "hidden", // ✅ Prevents scrolling inside game
+        overflow: "hidden",
         gap: 2,
       }}
     >
-      <ScoreBoard score={score} />
+      <ScoreBoard score={score} highScore={highScore} />
 
       <Box
         sx={{

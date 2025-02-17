@@ -1,7 +1,7 @@
 import React from "react";
 import { Typography, Box } from "@mui/material";
 
-const ScoreBoard = ({ score }) => (
+const ScoreBoard = ({ score, highScore }) => (
   <Box
     sx={{
       marginTop: "20px",
@@ -10,12 +10,15 @@ const ScoreBoard = ({ score }) => (
       color: "white",
       textAlign: "center",
       borderRadius: "8px",
-      width: "200px",
+      width: "250px",
       fontSize: "20px",
       fontWeight: "bold",
     }}
   >
     <Typography variant="h6">Score: {score}</Typography>
+    <Typography variant="subtitle1" sx={{ fontSize: "16px", color: "#FFF" }}>
+      High Score: {highScore}
+    </Typography>
   </Box>
 );
 
