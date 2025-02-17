@@ -14,9 +14,12 @@ const GameBoard = () => {
   const [board, setBoard] = useState(addRandomTile(generateEmptyBoard()));
   const [history, setHistory] = useState([]);
   const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState(
-    () => Number(localStorage.getItem("highScore")) || 0
-  );
+
+  // ✅ Load high score from localStorage (If it's first game, default to 0)
+  const [highScore, setHighScore] = useState(() => {
+    const storedHighScore = localStorage.getItem("highScore");
+    return storedHighScore !== null ? Number(storedHighScore) : 0;
+  });
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -37,7 +40,7 @@ const GameBoard = () => {
     let { newBoard, score: gainedScore, moved } = moveTiles(board, direction);
 
     if (moved) {
-      animateTiles(); // ✅ Animate movement
+      animateTiles();
       newBoard = addRandomTile(newBoard);
       setBoard(newBoard);
       setHistory([...history, prevBoard]);
@@ -46,7 +49,7 @@ const GameBoard = () => {
     }
   };
 
-  // ✅ Add animation for tiles using Anime.js
+  // ✅ Animate tiles when they move
   const animateTiles = () => {
     anime({
       targets: ".tile",
@@ -56,6 +59,7 @@ const GameBoard = () => {
     });
   };
 
+  // ✅ Check if the game is over (no empty tiles)
   const checkGameOver = (board) => {
     const hasEmptyTiles = board.some((row) => row.includes(null));
     if (!hasEmptyTiles) {
@@ -63,10 +67,13 @@ const GameBoard = () => {
     }
   };
 
+  // ✅ Save high score to localStorage (Handles first-time players)
   const saveHighScore = () => {
     if (score > highScore) {
       setHighScore(score);
       localStorage.setItem("highScore", score);
+    } else if (highScore === 0) {
+      localStorage.setItem("highScore", score); // First-time player fix
     }
   };
 
