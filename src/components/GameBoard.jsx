@@ -27,7 +27,6 @@ const GameBoard = () => {
   const [touchEnd, setTouchEnd] = useState(null);
 
   useEffect(() => {
-    // ✅ Keyboard Controls
     const handleKeyDown = (event) => {
       const keyMap = {
         ArrowUp: "up",
@@ -44,7 +43,6 @@ const GameBoard = () => {
     };
   }, [board]);
 
-  // ✅ Handle Touch Events (Swipe Controls for Mobile)
   const handleTouchStart = (event) => {
     setTouchStart({ x: event.touches[0].clientX, y: event.touches[0].clientY });
   };
@@ -61,13 +59,11 @@ const GameBoard = () => {
     const deltaY = touchStart.y - event.changedTouches[0].clientY;
 
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      // Horizontal Swipe
-      if (deltaX > 50) handleMove("left"); // Swipe Left
-      else if (deltaX < -50) handleMove("right"); // Swipe Right
+      if (deltaX > 50) handleMove("left");
+      else if (deltaX < -50) handleMove("right");
     } else {
-      // Vertical Swipe
-      if (deltaY > 50) handleMove("up"); // Swipe Up
-      else if (deltaY < -50) handleMove("down"); // Swipe Down
+      if (deltaY > 50) handleMove("up");
+      else if (deltaY < -50) handleMove("down");
     }
 
     setTouchStart(null);
@@ -149,17 +145,18 @@ const GameBoard = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-start", // ✅ Aligns game to the top of the screen
         width: "100vw",
         height: "100vh",
+        paddingTop: { xs: "10vh", md: "5vh" }, // ✅ Pushes game up on mobile
         overflow: "hidden",
         gap: 2,
-        touchAction: "none", // ✅ Prevent accidental scrolling
+        touchAction: "none",
       }}
-      onTouchStart={handleTouchStart} // ✅ Capture swipe start
-      onTouchEnd={handleTouchEnd} // ✅ Capture swipe end
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
-      <ToastContainer />
+      <ToastContainer limit={1} />
 
       <ScoreBoard score={score} highScore={highScore} />
 
