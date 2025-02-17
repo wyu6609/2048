@@ -144,12 +144,12 @@ const GameBoard = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "flex-start", // ✅ Keep game higher up
         width: "100vw",
-        minHeight: "100vh",
-        paddingTop: "15px", // ✅ Ensure scoreboard appears 15px from top
-        overflowX: "hidden",
-        gap: { xs: 1, md: 2 }, // ✅ Maintain spacing between components
+        minHeight: "100vh", // ✅ Allow scrolling to refresh
+        paddingTop: { xs: "10vh", md: "5vh" }, // ✅ Pushes up on mobile
+        overflowX: "hidden", // ✅ Prevents horizontal scroll
+        gap: 2,
       }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
